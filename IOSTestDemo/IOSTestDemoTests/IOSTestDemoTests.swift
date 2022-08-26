@@ -10,22 +10,60 @@ import XCTest
 
 class IOSTestDemoTests: XCTestCase {
 
+    //Mark :- Variables
+    var userViewModel: UserViewModel!
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        userViewModel = UserViewModel()
     }
-
+    
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        try super.tearDownWithError()
+        userViewModel = nil
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    func test_entered_name_is_empty() throws {
+        XCTAssertFalse(
+            userViewModel.validateSignupCredentials(
+                signupModel: SignupModel(name: "", email: "dummy@gmail.com", password: "dummy")
+            ),
+            "Name empty"
+        )
     }
-
+    
+    func test_entered_email_is_empty() throws {
+        XCTAssertFalse(
+            userViewModel.validateSignupCredentials(
+                signupModel: SignupModel(name: "dummy", email: "", password: "dummy")
+            ),
+            "Email empty"
+        )
+    }
+    
+    func test_entered_password_is_empty() throws {
+        XCTAssertFalse(
+            userViewModel.validateSignupCredentials(
+                signupModel: SignupModel(name: "dummy", email: "dummy@gmail.com", password: "")),
+            "Password empty"
+        )
+    }
+    
+    func test_entered_email_is_not_valid() throws {
+        XCTAssertFalse(
+            userViewModel.validateSignupCredentials(
+                signupModel: SignupModel(name: "dummy", email: "dummy@", password: "dummy")),
+            "Email not valid"
+        )
+    }
+    
+    func test_entered_proper_credentials() throws {
+        XCTAssertTrue(
+            userViewModel.validateSignupCredentials(
+                signupModel: SignupModel(name: "dummy", email: "dummy@gmail.com", password: "dummy")),
+            "Credentials are proper"
+        )
+    }
+    
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {
